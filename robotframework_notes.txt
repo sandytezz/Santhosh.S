@@ -1,0 +1,121 @@
+
+                                             ROBOTFRAMEWORK USING PYTHON
+
+important for robotframework
+
+  1. Selenium
+  2. robotframework
+  3. robotframework-selenium
+  
+ ---------------------------------------------------------------------------------------------------------------------------
+ 
+ # Sections
+ 
+ *** settings ***
+ *** variables ***
+ *** Test cases ***
+ *** Keywords ***
+ 
+ #Functions 
+ 
+ radio button : *select radio button*
+ check box : *select checkbox*
+ Element : * click element *
+ 
+ 
+ # Inheritance
+ 
+   parent = ../
+   child = /
+   Siblings = directname
+   
+   TBS(Parrent)
+    |                     
+    |----ACA--|           |         
+    |         | (syblings)|
+    |----1099-|           | (childs)
+    |         | (syblings)|
+    |----BOIR-|           |
+     
+    TBS----BOIR = /
+    TBS----ACA = /
+    TBS----1099 = /
+    BOIR----TBS = ../
+    ACA----TBS = ../
+    BOIR----ACA = ACA
+    ACA----BOIR = BOIR
+    1099----BOIR = BOIR
+    BOIR----1099 = 1099
+           
+   TBS(Parrent)
+    |                     
+    |----ACA                
+    |      |    
+    |      |----NEC
+    |      |
+    |      |
+    |      |----MISC
+    |
+    |    
+    |        
+    |----BOIR
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   *** settings ***
+   
+   *(use library for python)*                    EX: library  selenium
+   *(use resource for robotfile)*                   resources  selenium
+   
+   # XML
+   
+   1. What is xml
+          * it is used to store and transport data
+          * it is designed to both human and machine readable
+   2. import xml file in robotframework
+          * Library  XML
+          
+------------------------------------------------------------------------------------------------------------------------------
+ 
+    # HOW TO READ XML FILE
+    
+    *** Settings ***
+    Library    XML
+
+
+    *** Test Case ***
+    Read XML File
+
+      ${xml}  Parse Xml  login.xml
+ 
+      ${username}  Get element text  ${xml}  username
+      ${age}  Get element text  ${xml}  age
+
+      log to console  ${username}  
+      log to console  ${age}
+      
+------------------------------------------------------------------------------------------------------------------------------    
+    # HOW TO CREAT EXCEL FILE
+    
+    ${book}   Set Variable  tax.xlsx 
+    Open Workbook   ${book}
+    Create Worksheet    SHEET 1
+    
+    # HOW TO WRITE FILE IN EXCEL
+    
+    &{row}=       Create Dictionary      companyName=${companyName}    name=${name}   address=${address}   PhoneNumber=${PhoneNumber}          
+    Append Rows to Worksheet  ${row}  header=${TRUE}
+    Save Workbook
+------------------------------------------------------------------------------------------------------------------------------
