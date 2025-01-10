@@ -1,0 +1,89 @@
+                                                               Fileconversion Notes
+                                                               
+                                                               
+# EDITABLE PDF CODE
+
+import PyPDF2
+import pandas as pd
+import os
+
+
+pdf_dir = ("D:\\PYTHON\\fileconversion\\pdf_excel\\Zebra Pen Corp")
+for item in os.listdir(pdf_dir):
+    item_path = os.path.join(pdf_dir, item)  
+    #print(item_path)
+    if os.path.isfile(item_path):  
+        with open(item_path, "rb") as file:
+            reader = PyPDF2.PdfReader(file)
+            form_fields = reader.get_form_text_fields()
+
+    form_data = {key: form_fields.get(key, '') for key in form_fields.keys()}
+    df = pd.DataFrame([form_data])
+    df.to_excel(item+"output.xlsx", index=False)
+
+# Combained Excel code
+
+directory = 'D:\\PYTHON\\fileconversion\\pdf_excel'
+excel_files = [f for f in os.listdir(directory) if f.endswith('.xlsx') or f.endswith('.xls')]
+all_data = []
+for file in excel_files:
+    file_path = os.path.join(directory, file)
+    df = pd.read_excel(file_path, engine='openpyxl')
+    df['Source_File'] = file 
+    all_data.append(df)
+combined_data = pd.concat(all_data, ignore_index=True)
+combined_data.to_excel('D:\\PYTHON\\fileconversion\\pdf_excel\\combined_data.xlsx', index=False, engine='openpyxl')
+
+print("All Excel files have been successfully combined into one.")
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# DIGITAL PDF CODE
+
+import os
+import fitz  
+import pandas as pd
+
+# Function to extract text from a single PDF
+def extract_text_from_pdf(pdf_path):
+    pdf_document = fitz.open(pdf_path)
+    text_data = []
+    for page_num in range(pdf_document.page_count):
+        page = pdf_document[page_num]
+        text = page.get_text()
+        text_data.append(text)
+    pdf_document.close()
+    return "\n".join(text_data)
+
+# Function to process all PDFs in a folder and save to Excel
+def process_bulk_pdfs_to_excel(pdf_folder, excel_output):
+    pdf_data = []
+
+    # Iterate over all PDF files in the folder
+    for filename in os.listdir(pdf_folder):
+        if filename.endswith(".pdf"):
+            pdf_path = os.path.join(pdf_folder, filename)
+            print(f"Processing: {filename}")
+            try:
+                extracted_text = extract_text_from_pdf(pdf_path)
+                pdf_data.append({"PDF File": filename, "Extracted Text": extracted_text})
+            except Exception as e:
+                print(f"Error processing {filename}: {e}")
+
+    # Convert to a DataFrame
+    df = pd.DataFrame(pdf_data)
+
+    # Save to Excel
+    df.to_excel(excel_output, index=False, engine="openpyxl")
+    print(f"Extraction complete! Data saved to {excel_output}")
+
+
+pdf_folder = "D:\\PYTHON\\fileconversion\\PH_BREW\\PH_drew_individual"
+excel_output = "bulk_pdf_output.xlsx"
+
+
+if __name__ == "__main__":
+    if not os.path.exists(pdf_folder):
+        print(f"Folder '{pdf_folder}' does not exist.")
+    else:
+        process_bulk_pdfs_to_excel(pdf_folder, excel_output)
